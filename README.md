@@ -6,4 +6,4 @@ git add *
 git commit -m "커밋명"
 
 git push
-출처: https://purple-whale.tistory.com/37 [purple-whale:티스토리]
+
