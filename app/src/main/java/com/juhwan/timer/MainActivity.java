@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private NumberPicker minutePicker, secondPicker;
     Dialog timeDialog;
     String m, s; // 대화상자에서 지정한 분, 초 값이 들어있는 문자열
+
+    TimerTask timerTask;
+    Timer timer = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +47,6 @@ public class MainActivity extends AppCompatActivity {
                     // 시간 선택
                     isStart = true;
                 }
-                Timer timer = new Timer();
-                TimerTask timerTask = new TimerTask() {
-                    @Override
-                    public void run() {
-
-                    }
-                };
             }
         });
 
@@ -69,6 +66,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if (isStart == true) {
+
+        }
+    }
+
+    public void startTimer() {
+        timerTask = new TimerTask() {
+            int count = 60;
+            @Override
+            public void run() {
+                count --;
+                Toast t = Toast.makeText(getApplicationContext(), count+"초", Toast.LENGTH_LONG);
+                t.show();
+            }
+        };
+        timer.schedule(timerTask,0,1000);
     }
 
     public void showTimeDialog() {
