@@ -20,11 +20,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView minute;
     private TextView second;
     private boolean isStart = false;
-    private boolean isStop;
+    private boolean isStop = false;
 
     private NumberPicker minutePicker, secondPicker;
     Dialog timeDialog;
-    String m, s; // 대화상자에서 지정한 분, 초 값이 들어있는 문자열
+    private int m, s; // setText 할 분, 초 값이 들어있는 문자열
 
     TimerTask timerTask;
     Timer timer = new Timer();
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isStart == false) {
                     showTimeDialog();
-                    // 시간 선택
+
                     isStart = true;
                 }
             }
@@ -67,22 +67,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (isStart == true) {
 
-        }
     }
 
+
+
     public void startTimer() {
+
         timerTask = new TimerTask() {
-            int count = 60;
             @Override
             public void run() {
-                count --;
-                Toast t = Toast.makeText(getApplicationContext(), count+"초", Toast.LENGTH_LONG);
-                t.show();
+                if (s > 0) {
+                    s --;
+                }
+                if (m != 0 && s == 0) {
+                    m --;
+                    s = 59;
+                }
+
+                minute.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (m < 10) {
+                            minute.setText("0" + m);
+                        } else {
+                            minute.setText(m + "");
+                        }
+                    }
+                });
+                second.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (s < 10) {
+                            second.setText("0" + s);
+                        } else {
+                            second.setText(s + "");
+                        }
+                    }
+                });
+                if (m == 0 && s == 0) {
+                    timer.cancel();
+                }
+
             }
         };
-        timer.schedule(timerTask,0,1000);
+        timer.schedule(timerTask,1000,1000);
     }
 
     public void showTimeDialog() {
@@ -100,24 +129,32 @@ public class MainActivity extends AppCompatActivity {
         minutePicker.setMinValue(0);
         secondPicker.setMaxValue(59);
         secondPicker.setMinValue(1);
-
         timeDialog.show();
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                minute.setText(minutePicker.getValue() + "");
-                second.setText(secondPicker.getValue() + "");
-                if (Integer.parseInt(minute.getText().toString()) < 10) {
-                    m = minute.getText().toString();
+                m = Integer.parseInt(minutePicker.getValue() + "");
+                s = Integer.parseInt(secondPicker.getValue() + "");
+
+                if (m < 10) {
                     minute.setText("0" + m);
+                } else {
+                    minute.setText(Integer.toString(m));
                 }
-                if (Integer.parseInt(second.getText().toString()) < 10) {
-                    s = second.getText().toString();
+                if (s < 10) {
                     second.setText("0" + s);
+                } else {
+                    second.setText(Integer.toString(s));
                 }
 
                 timeDialog.dismiss();
+                startTimer();
             }
         });
     }
 }
+
+/*
+Toast t = Toast.makeText(getApplicationContext(), m + "  " + s, Toast.LENGTH_LONG);
+        t.show();
+*/
