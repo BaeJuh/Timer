@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
     Dialog timeDialog;
     private int m, s; // setText 할 분, 초 값이 들어있는 문자열
 
-    TimerTask timerTask;
-    Timer timer = new Timer();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,60 +55,75 @@ public class MainActivity extends AppCompatActivity {
                     isStop = true;
                 }
                 else if (isStart == true && isStop == true) {
-                    stopButton.setText("STOP");
-                    minute.setText("00");
-                    second.setText("00");
-                    isStart = false;
-                    isStop = false;
+                    clearTimer();
                 }
             }
         });
-
-
     }
 
-
-
-    public void startTimer() {
+    public void startTimer() { // start 버튼을 누를 경우 // 타이머가 생성됨
+        Timer timer = new Timer();
+        TimerTask timerTask;
 
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                if (s > 0) {
-                    s --;
-                }
-                if (m != 0 && s == 0) {
-                    m --;
-                    s = 59;
-                }
+                if (isStop == true) {
 
-                minute.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (m < 10) {
-                            minute.setText("0" + m);
-                        } else {
-                            minute.setText(m + "");
-                        }
+                } else {
+                    if (s > 0) {
+                        s --;
                     }
-                });
-                second.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (s < 10) {
-                            second.setText("0" + s);
-                        } else {
-                            second.setText(s + "");
-                        }
+                    if (m != 0 && s == 0) {
+                        m --;
+                        s = 59;
                     }
-                });
-                if (m == 0 && s == 0) {
-                    timer.cancel();
-                }
 
+                    minute.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (m < 10) {
+                                minute.setText("0" + m);
+                            } else {
+                                minute.setText(m + "");
+                            }
+                        }
+                    });
+                    second.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (s < 10) {
+                                second.setText("0" + s);
+                            } else {
+                                second.setText(s + "");
+                            }
+                        }
+                    });
+                    if (m == 0 && s == 0) {
+                        timer.cancel();
+                    }
+                }
             }
         };
         timer.schedule(timerTask,1000,1000);
+    }
+
+    public void stopTimer() { // stop 버튼을 누를 경우
+
+    }
+
+    public void clearTimer() { // 타이머 초기화
+        m = 0;
+        s = 0;
+
+        stopButton.setText("STOP");
+
+        minute.setText("00");
+        second.setText("00");
+
+        isStart = false;
+        isStop = false;
     }
 
     public void showTimeDialog() {
