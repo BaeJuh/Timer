@@ -69,7 +69,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (isStop == true) {
-
+                    startButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            isStop = false;
+                            stopButton.setText("STOP");
+                        }
+                    });
                 } else {
                     if (s > 0) {
                         s --;
